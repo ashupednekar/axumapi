@@ -9,7 +9,7 @@ fn start_server() -> PyResult<()> {
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn fasterapi(_py: Python, m: &PyModule) -> PyResult<()> {
+fn axumapi(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(start_server, m)?)?;
     Ok(())
 }
