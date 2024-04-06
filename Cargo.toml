@@ -9,4 +9,5 @@ name = "axumapi"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.21.1"
+pyo3 = "0.20.3"
+pyo3-asyncio = { version = "0.20.0", features = ["tokio-runtime"] }
