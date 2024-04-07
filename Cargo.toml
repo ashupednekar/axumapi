@@ -12,3 +12,5 @@ crate-type = ["cdylib"]
 axum = { version = "0.7.5", features = ["tokio"] }
 pyo3 = "0.20.3"
 pyo3-asyncio = { version = "0.20.0", features = ["tokio-runtime"] }
+serde = { version = "1.0.197", features = ["derive"] }
+tokio = { version = "1.37.0", features = ["full"] }
