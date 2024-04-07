@@ -1,0 +1,5 @@
+starbucks:
+  menu:
+    - route: americano/
+      method: get
+      function: list_americano
