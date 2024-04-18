@@ -2,5 +2,5 @@ from typing import List
 
 
 def list_americano() -> List:
-    print("😀☕️")
+    raise ZeroDivisionError("😀☕️")
     return ["iced americano", "americano"]
