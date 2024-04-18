@@ -5,10 +5,10 @@ use ::tokio::runtime::Builder;
 use axum::{routing::get, Router};
 
 #[pyfunction]
-pub fn start_server(py: Python) -> PyResult<()> {
+pub fn start_server(_py: Python) -> PyResult<()> {
     let rt = Builder::new_multi_thread().enable_all().build().unwrap();
 
-    let locals = pyo3_asyncio::TaskLocals::with_running_loop(py)?.copy_context(py)?;
+    /*let locals = pyo3_asyncio::TaskLocals::with_running_loop(py)?.copy_context(py)?;
     // Convert the async move { } block to a Python awaitable
     pyo3_asyncio::tokio::future_into_py_with_locals(py, locals.clone(), async move {
         let py = Python::with_gil(|py| {
@@ -21,16 +21,16 @@ pub fn start_server(py: Python) -> PyResult<()> {
         let l = py.await?;
         println!("l: {:?}", l);
         Ok(())
-    });
+    });*/
 
     rt.block_on(async move {
-        serve(py).await;
+        serve().await;
     });
 
     Ok(())
 }
 
-async fn serve<'a>(_py: Python<'a>) {
+async fn serve<'a>() {
     let app = Router::new().route("/", get(root));
     println!("Starting server...");
     let listener = TcpListener::bind("0.0.0.0:3001").await.unwrap();
