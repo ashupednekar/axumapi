@@ -12,7 +12,4 @@ class Songs:
         if artist:
             return data[artist]
         else:
-            songs = []
-            for _, a in data.items():
-                songs += a
-            return songs
+            return [song for artist_songs in data.values() for song in artist_songs]
