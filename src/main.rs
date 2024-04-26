@@ -1,8 +1,17 @@
 use axum::{routing::get, Router};
+
+mod handlers {
+    pub mod root;
+    pub mod utils {
+        pub mod invoke;
+    }
+}
+
 use handlers::root;
 
 #[tokio::main]
 async fn main() {
+    println!("Starting server at :3000");
     // build our application with a single route
     let app = Router::new().route("/", get(|| async { root::handle().await }));
 
