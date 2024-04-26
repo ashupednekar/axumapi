@@ -90,6 +90,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "axumapi"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "pyo3",
+ "pyo3-asyncio",
+ "tokio",
+ "tower",
+]
+
+[[package]]
 name = "backtrace"
 version = "0.3.71"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -682,17 +693,6 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "server"
-version = "0.1.0"
-dependencies = [
- "axum",
- "pyo3",
- "pyo3-asyncio",
- "tokio",
- "tower",
 ]
 
 [[package]]
