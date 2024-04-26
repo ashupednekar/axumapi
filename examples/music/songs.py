@@ -6,10 +6,17 @@ data = {
 }
 
 
-class Songs:
+# class Songs:
+#
+#    def list(self, artist: str | None = None) -> List[str]:
+#        if artist:
+#            return data[artist]
+#        else:
+#            return [song for artist_songs in data.values() for song in artist_songs]
 
-    def list(self, artist: str | None = None) -> List[str]:
-        if artist:
-            return data[artist]
-        else:
-            return [song for artist_songs in data.values() for song in artist_songs]
+
+def list(artist: str | None = None) -> List[str]:
+    if artist:
+        return data[artist]
+    else:
+        return [song for artist_songs in data.values() for song in artist_songs]
