@@ -8,7 +8,7 @@ data = {
 
 class Songs:
 
-    def list(self, artist: Optional[str]) -> List[str]:
+    def list(self, artist: str | None = None) -> List[str]:
         if artist:
             return data[artist]
         else:

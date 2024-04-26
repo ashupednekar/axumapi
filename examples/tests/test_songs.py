@@ -6,7 +6,7 @@ class TestSongs(TestCase):
     songs = Songs()
 
     def test_songs_without_filter(self):
-        r = self.songs.list(None)
+        r = self.songs.list()
         self.assertEqual(
             [song for artist_songs in data.values() for song in artist_songs], r
         )
