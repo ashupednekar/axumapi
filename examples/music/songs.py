@@ -17,6 +17,8 @@ data = {
 
 def list(artist: str | None = None) -> List[str]:
     if artist:
-        return data[artist]
+        r = data[artist]
     else:
-        return [song for artist_songs in data.values() for song in artist_songs]
+        r = [song for artist_songs in data.values() for song in artist_songs]
+    print(f"songs: {r}")
+    return r

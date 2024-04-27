@@ -5,6 +5,6 @@ pub async fn handle() -> String {
 
     // TODO: add openapi parsing... with module tag support
 
-    call_python("music.artists", "list");
+    let _ = call_python("music.artists", "list");
     "yay".to_owned()
 }
