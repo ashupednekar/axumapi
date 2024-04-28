@@ -1,8 +1,25 @@
+use axum::http::{HeaderMap, HeaderValue};
 use pyo3::{prelude::*, types::PyList, types::PyModule};
+use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
-pub fn call_python(invokation_path: &str) -> Result<Py<PyAny>, PyErr> {
+fn get_headers_map(headers: &HeaderMap<HeaderValue>) -> HashMap<String, String> {
+    let mut map = HashMap::new();
+    for (key, value) in headers.iter() {
+        let key_str = key.as_str().to_owned();
+        let value_str = String::from_utf8_lossy(value.as_bytes()).into_owned();
+        map.insert(key_str, value_str);
+    }
+    map
+}
+
+pub fn call_python(
+    invokation_path: &str,
+    headers: HeaderMap,
+    params: HashMap<String, String>,
+    body: String,
+) -> Result<Py<PyAny>, PyErr> {
     // TODO: handle args
     let mut l = invokation_path.split(":");
     println!("invoking python...");
@@ -17,7 +34,8 @@ pub fn call_python(invokation_path: &str) -> Result<Py<PyAny>, PyErr> {
         let app: Py<PyAny> = PyModule::from_code_bound(py, &py_app, "", "")?
             .getattr(l.next().unwrap())?
             .into();
-        app.call0(py).unwrap().extract(py)
+        app.call1(py, (get_headers_map(&headers), params, body))
+        //app.call0(py).unwrap().extract(py)
     })
 }
 
@@ -27,7 +45,7 @@ mod tests {
 
     #[test]
     fn test_call_python() {
-        let r = call_python("examples/music:songs.py:list");
-        println!("r: {:?}", r.unwrap().to_string());
+        //let r = call_python("examples/music:songs.py:list");
+        //println!("r: {:?}", r.unwrap().to_string());
     }
 }
