@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 data = {
     "taylor swift": ["red", "love story", "you belong with me"],
@@ -15,7 +15,12 @@ data = {
 #            return [song for artist_songs in data.values() for song in artist_songs]
 
 
-def list(artist: str | None = None) -> List[str]:
+def list(*request) -> List[str]:
+    headers, params, body = request
+    print(f"headers: {headers}")
+    print(f"paramas: {params}")
+    print(f"body: {body}")
+    artist = params.get("artist")
     if artist:
         r = data[artist]
     else:
