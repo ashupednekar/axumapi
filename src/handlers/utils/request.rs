@@ -9,7 +9,7 @@ use axum::http::header::{HeaderMap, HeaderValue};
     dict
 }*/
 
-pub fn parse_cookies(headers: &mut HeaderMap) -> std::collections::HashMap<String, String> {
+pub fn parse_cookies(headers: &HeaderMap) -> std::collections::HashMap<String, String> {
     let mut cookie_map = std::collections::HashMap::new();
     let cookie_str = headers
         .get("cookie")

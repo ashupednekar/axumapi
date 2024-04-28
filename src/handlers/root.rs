@@ -17,6 +17,8 @@ pub async fn handle(
     println!("method: {}", method);
     println!("headers: {:?}", headers);
     println!("body: {}", body);
+    let cookies = parse_cookies(&headers);
+    println!("cookies: {:?}", cookies);
     let r = call_python("examples/music:songs.py:list");
     r.unwrap().to_string()
 }
