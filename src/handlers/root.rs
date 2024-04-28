@@ -28,12 +28,7 @@ pub async fn handle(
         Some(m) => {
             println!("m: {}", m);
 
-            let r = call_python(
-                "examples/spotify/albums/:__init__.py:list",
-                headers,
-                params,
-                body,
-            );
+            let r = call_python(&format!("{}:list", m), headers, params, body);
             let res = r.unwrap().to_string();
             (StatusCode::OK, res)
         }

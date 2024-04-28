@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 # class User:
 
 
-def list(*args): ...
+def list(*args):
+    logger.info(f"in user list... {args}")
 
 
 def update_add(*args): ...

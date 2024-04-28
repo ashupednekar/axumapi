@@ -31,6 +31,12 @@ pub async fn get_import_module(uri: &OriginalUri) -> Option<String> {
                 if md1.is_file() {
                     println!("Found module: {}", submodule_path);
                     import_str.push_str(&submodule_path);
+                    let i = import_str.rfind("/").unwrap();
+                    import_str = format!(
+                        "{}/:{}",
+                        &import_str[0..i],
+                        &import_str[i + 1..import_str.len()]
+                    );
                     break;
                 }
             }
