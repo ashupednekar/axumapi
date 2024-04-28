@@ -1,11 +1,9 @@
 use super::utils::invoke::call_python;
+use super::utils::request::parse_cookies;
 use axum::{
-    body::{Body, Bytes},
     extract::{Extension, Json, Path, Query, Request},
     http::{HeaderMap, Method},
-    Router,
 };
-use serde_json::Value;
 use std::collections::HashMap;
 
 pub async fn handle(
@@ -19,7 +17,6 @@ pub async fn handle(
     println!("method: {}", method);
     println!("headers: {:?}", headers);
     println!("body: {}", body);
-
     let r = call_python("examples/music:songs.py:list");
     r.unwrap().to_string()
 }

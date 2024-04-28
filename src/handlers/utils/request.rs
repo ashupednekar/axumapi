@@ -1,5 +1,4 @@
-use axum::http::header::HeaderMap;
-use pyo3::types::PyDict;
+use axum::http::header::{HeaderMap, HeaderValue};
 
 /*fn headers_to_dict(headers: HeaderMap) -> PyDict {
     let mut dict = PyDict::new();
@@ -10,18 +9,21 @@ use pyo3::types::PyDict;
     dict
 }*/
 
-fn parse_cookies(cookie_str: &str) -> std::collections::HashMap<String, String> {
+pub fn parse_cookies(headers: &mut HeaderMap) -> std::collections::HashMap<String, String> {
     let mut cookie_map = std::collections::HashMap::new();
-
+    let cookie_str = headers
+        .get("cookie")
+        .map(|value| value.to_str().unwrap_or_default())
+        .unwrap_or("");
+    println!("cookie str: {:?}", cookie_str);
     for pair in cookie_str.split(';') {
-        let mut parts = pair.trim().splitn(2, '=');
+        let mut parts = pair.trim().split('=');
         if let Some(key) = parts.next() {
             if let Some(value) = parts.next() {
                 cookie_map.insert(key.to_string(), value.to_string());
             }
         }
     }
-
     cookie_map
 }
 
@@ -30,9 +32,20 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_cookie_parser() {
-        let cookie_str = String::from("tenant=ashu;book=one");
-        let cookies = parse_cookies(&cookie_str);
+    fn test_cookie_parser_cookie_present() {
+        let mut headers = HeaderMap::new();
+        headers.append(
+            "cookie",
+            HeaderValue::from_str("tenant=ashu;book=one").unwrap(),
+        );
+        let cookies = parse_cookies(&mut headers);
+        println!("cookies: {:?}", cookies);
+    }
+
+    #[test]
+    fn test_cookie_parser_cookie_absent() {
+        let mut headers = HeaderMap::new();
+        let cookies = parse_cookies(&mut headers);
         println!("cookies: {:?}", cookies);
     }
 }
