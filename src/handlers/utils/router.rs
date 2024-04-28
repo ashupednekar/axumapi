@@ -19,7 +19,7 @@ pub async fn get_import_module(uri: &OriginalUri) -> Option<String> {
     while !module_path.is_empty() {
         if let Ok(md) = metadata(&module_path) {
             if md.is_dir() {
-                println!("Found root module: {}", &module_path);
+                println!("Found module: {}", &module_path);
                 import_str.push_str(&module_path);
                 import_str.push_str(":__init__.py");
                 break;
@@ -29,7 +29,7 @@ pub async fn get_import_module(uri: &OriginalUri) -> Option<String> {
             submodule_path.push_str(".py");
             if let Ok(md1) = metadata(&submodule_path) {
                 if md1.is_file() {
-                    println!("Found module: {}", submodule_path);
+                    println!("Found submodule: {}", submodule_path);
                     import_str.push_str(&submodule_path);
                     let i = import_str.rfind("/").unwrap();
                     import_str = format!(
