@@ -18,7 +18,7 @@ fn get_headers_map(headers: &HeaderMap<HeaderValue>) -> HashMap<String, String> 
 pub fn call_python(
     invokation_path: &str,
     query_params: HashMap<String, String>,
-    path_params: Vec<String>,
+    path_params: Vec<i32>,
     headers: HeaderMap,
     body: String,
 ) -> Result<Py<PyAny>, PyErr> {
@@ -50,7 +50,8 @@ pub fn call_python(
 
         let mut kwargs = HashMap::new();
         kwargs.insert("payload", payload);
-
+        println!("query_params: {:?}", query_params);
+        //kwargs.insert("query_params", query_params);
         view.call_bound(py, (), Some(&kwargs.into_py_dict_bound(py)))
         /*view.call1(
             py,

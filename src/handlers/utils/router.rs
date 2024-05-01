@@ -56,7 +56,7 @@ pub async fn get_import_module(uri: &str) -> Option<String> {
 pub async fn append_function_suffix(
     import_str: &str,
     method: &str,
-    path_params: Vec<String>,
+    path_params: Vec<i32>,
 ) -> String {
     let mut import_str = String::from(import_str);
     match method {

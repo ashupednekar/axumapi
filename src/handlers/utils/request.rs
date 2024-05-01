@@ -1,6 +1,8 @@
 use axum::extract::OriginalUri;
 use axum::http::header::{HeaderMap, HeaderValue};
 use regex::Regex;
+use serde_json::json;
+use std::collections::HashMap;
 /*fn headers_to_dict(headers: HeaderMap) -> PyDict {
     let mut dict = PyDict::new();
     for (key, value) in headers.iter() {
@@ -17,19 +19,21 @@ pub fn get_uri_str(uri: OriginalUri) -> String {
     uri
 }
 
-pub fn extract_path_params(url: &str) -> (Vec<String>, String) {
+pub fn extract_path_params(url: &str) -> (Vec<i32>, String) {
     let re = Regex::new(r"/(\d+)/?").unwrap();
     let mut params = Vec::new();
     let mut new_url = String::from(url);
     for capture in re.captures_iter(url) {
         let param = capture.get(1).unwrap().as_str().to_string();
-        params.push(param.clone());
+        let p: i32 = param.parse().expect("not an int");
+        params.push(p);
         new_url = new_url.replace(&param, "");
     }
     new_url = new_url.replace("//", "/");
-    if new_url.ends_with('/') && new_url != "/" {
-        new_url.pop();
-    }
+    new_url = new_url
+        .replace("https:/", "https://")
+        .replace("http:/", "http://");
+
     (params, new_url)
 }
 
@@ -49,6 +53,14 @@ pub fn parse_cookies(headers: &HeaderMap) -> std::collections::HashMap<String, S
         }
     }
     cookie_map
+}
+
+pub fn get_payload_map(body: &str) -> HashMap<String, Vec<String>> {
+    let payload = match body.is_empty() {
+        true => Ok(HashMap::new()),
+        false => serde_json::from_str(&body),
+    };
+    payload.unwrap()
 }
 
 #[cfg(test)]
@@ -77,7 +89,23 @@ mod tests {
     fn test_extract_path_params_single_end() {
         let url = String::from("http://localhost:3000/examples/spotify/albums/user/1/");
         let (params, new_url) = extract_path_params(&url);
-        println!("params: {:?}", params);
-        println!("new_url: {}", new_url);
+        assert_eq!(new_url, url.replace("/1", ""));
+        assert_eq!(params, vec![1])
+    }
+
+    #[test]
+    fn test_extract_path_params_single_middle() {
+        let url = String::from("http://localhost:3000/examples/spotify/albums/1/user/");
+        let (params, new_url) = extract_path_params(&url);
+        assert_eq!(new_url, url.replace("/1", ""));
+        assert_eq!(params, vec![1])
+    }
+
+    #[test]
+    fn test_extract_path_params_multiple() {
+        let url = String::from("http://localhost:3000/examples/spotify/albums/1/user/1/");
+        let (params, new_url) = extract_path_params(&url);
+        assert_eq!(new_url, url.replace("/1", ""));
+        assert_eq!(params, vec![1, 1])
     }
 }

@@ -30,8 +30,10 @@ pub async fn handle(
             println!("m: {}", m);
             let import_str = append_function_suffix(&m, method.as_str(), path_params.clone()).await;
             let r = call_python(&import_str, query_params, path_params, headers, body);
-            let res = r.unwrap().to_string();
-            (StatusCode::OK, res)
+            match r {
+                Ok(r) => (StatusCode::OK, r.to_string()),
+                Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()),
+            }
         }
         None => (
             StatusCode::NOT_FOUND,
