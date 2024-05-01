@@ -1,6 +1,6 @@
 use super::utils::invoke::call_python;
 use super::utils::request::{extract_path_params, get_uri_str, parse_cookies};
-use super::utils::router::get_import_module;
+use super::utils::router::{append_function_suffix, get_import_module};
 use axum::{
     extract::{OriginalUri, Query},
     http::{HeaderMap, Method, StatusCode},
@@ -24,18 +24,12 @@ pub async fn handle(
     println!("cookies: {:?}", cookies);
     let (path_params, url) = extract_path_params(&get_uri_str(uri.clone()));
 
-    let res = get_import_module(&url, method.as_str()).await;
-    match res {
+    let module = get_import_module(&url).await;
+    match module {
         Some(m) => {
             println!("m: {}", m);
-
-            let r = call_python(
-                &format!("{}:list", m),
-                query_params,
-                path_params,
-                headers,
-                body,
-            );
+            let import_str = append_function_suffix(&m, method.as_str(), path_params.clone()).await;
+            let r = call_python(&import_str, query_params, path_params, headers, body);
             let res = r.unwrap().to_string();
             (StatusCode::OK, res)
         }

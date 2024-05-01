@@ -8,29 +8,29 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def list(*args):
-    logger.info(f"in album list: {args}")
+def list(**kwargs):
+    logger.info(f"in album list: {kwargs}")
 
 
-def retrieve(id: int, *args):
-    logger.info(f"in album retrieve: {id}, {args}")
+def retrieve(id: int, **kwargs):
+    logger.info(f"in album retrieve: {id}, {kwargs}")
 
 
-def get_tracks(id: int, *args):
-    logger.info(f"in album get tracks: {id}, {args}")
+def get_tracks(id: int, **kwargs):
+    logger.info(f"in album get tracks: {id}, {kwargs}")
 
 
 # TODO: maybe allow named classes in same file to behave same as seperate modules
 # class User:
 #
 #
-#    def list(*args): ...
+#    def list(**kwargs): ...
 #
 #
-#    def update_add(*args): ...
+#    def update_add(**kwargs): ...
 #
 #
-#    def update_remove(*args): ...
+#    def update_remove(**kwargs): ...
 #
 #
-#    def get_contains(*args): ...
+#    def get_contains(**kwargs): ...

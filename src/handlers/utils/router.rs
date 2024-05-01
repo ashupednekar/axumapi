@@ -1,6 +1,6 @@
 use std::fs::metadata;
 
-pub async fn get_import_module(uri: &str, method: &str) -> Option<String> {
+pub async fn get_import_module(uri: &str) -> Option<String> {
     println!("uri: {}", uri);
 
     let mut module_path: String = String::from(uri);
@@ -49,15 +49,28 @@ pub async fn get_import_module(uri: &str, method: &str) -> Option<String> {
         None
     } else {
         println!("import str: {}", import_str);
-
-        match method {
-            "GET" => import_str.push_str(":list"),
-            "POST" => import_str.push_str(":create"),
-            "UPDATE" => import_str.push_str(":update"),
-            "DELETE" => import_str.push_str(":delete"),
-            _ => println!("unsupported method"),
-        }
-
         Some(import_str)
     }
+}
+
+pub async fn append_function_suffix(
+    import_str: &str,
+    method: &str,
+    path_params: Vec<String>,
+) -> String {
+    let mut import_str = String::from(import_str);
+    match method {
+        "GET" => {
+            if !(path_params.len() > 0) {
+                import_str.push_str(":list")
+            } else {
+                import_str.push_str(":retrieve")
+            }
+        }
+        "POST" => import_str.push_str(":create"),
+        "UPDATE" => import_str.push_str(":update"),
+        "DELETE" => import_str.push_str(":delete"),
+        _ => println!("unsupported method"),
+    }
+    import_str
 }

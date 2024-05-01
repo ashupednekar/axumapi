@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 # class User:
 
 
-def list(*args):
-    logger.info(f"in user list... {args}")
+def list(**kwargs):
+    logger.info(f"in user list... {kwargs}")
 
 
-def update_add(*args): ...
+def update_add(**kwargs): ...
 
 
-def update_remove(*args): ...
+def update_remove(**kwargs): ...
 
 
-def get_contains(*args): ...
+def get_contains(**kwargs): ...

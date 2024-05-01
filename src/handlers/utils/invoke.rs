@@ -1,4 +1,5 @@
 use axum::http::{HeaderMap, HeaderValue};
+use pyo3::types::IntoPyDict;
 use pyo3::{prelude::*, types::PyList, types::PyModule};
 use std::collections::HashMap;
 use std::fs;
@@ -32,13 +33,29 @@ pub fn call_python(
             .getattr("path")?
             .downcast_into::<PyList>()?;
         syspath.insert(0, &path)?;
-        let app: Py<PyAny> = PyModule::from_code_bound(py, &py_app, "", "")?
+        let view: Py<PyAny> = PyModule::from_code_bound(py, &py_app, "", "")?
             .getattr(l.next().unwrap())?
             .into();
-        app.call1(
+        /*let kwargs = HashMap::new();
+        kwargs.insert("query_params", query_params);
+        kwargs.insert("headers", get_headers_map(&headers));*/
+        //kwargs.insert("body", body);
+        let payload = match body.is_empty() {
+            true => HashMap::new(),
+            false => serde_json::from_str::<HashMap<String, Vec<HashMap<String, String>>>>(&body)
+                .unwrap(),
+        };
+
+        println!("payload: {:?}", payload);
+
+        let mut kwargs = HashMap::new();
+        kwargs.insert("payload", payload);
+
+        view.call_bound(py, (), Some(&kwargs.into_py_dict_bound(py)))
+        /*view.call1(
             py,
             (query_params, path_params, get_headers_map(&headers), body),
-        )
+        )*/
         //app.call0(py).unwrap().extract(py)
     })
 }
