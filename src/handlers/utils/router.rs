@@ -1,7 +1,6 @@
-use axum::extract::OriginalUri;
 use std::fs::metadata;
 
-pub async fn get_import_module(uri: &str) -> Option<String> {
+pub async fn get_import_module(uri: &str, method: &str) -> Option<String> {
     println!("uri: {}", uri);
 
     let mut module_path: String = String::from(uri);
@@ -50,6 +49,15 @@ pub async fn get_import_module(uri: &str) -> Option<String> {
         None
     } else {
         println!("import str: {}", import_str);
+
+        match method {
+            "GET" => import_str.push_str(":list"),
+            "POST" => import_str.push_str(":create"),
+            "UPDATE" => import_str.push_str(":update"),
+            "DELETE" => import_str.push_str(":delete"),
+            _ => println!("unsupported method"),
+        }
+
         Some(import_str)
     }
 }
