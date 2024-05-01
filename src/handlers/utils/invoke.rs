@@ -1,6 +1,6 @@
 use axum::http::{HeaderMap, HeaderValue};
 use pyo3::types::IntoPyDict;
-use pyo3::{prelude::*, types::PyList, types::PyModule};
+use pyo3::{prelude::*, types::PyList, types::PyModule, types::PyTuple};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
@@ -52,7 +52,11 @@ pub fn call_python(
         kwargs.insert("payload", payload);
         kwargs.insert("query_params", query_params);
         kwargs.insert("headers", get_headers_map(&headers));
-        view.call_bound(py, (), Some(&kwargs.into_py_dict_bound(py)))
+        view.call_bound(
+            py,
+            PyTuple::new(py, path_params),
+            Some(&kwargs.into_py_dict_bound(py)),
+        )
         /*view.call1(
             py,
             (query_params, path_params, get_headers_map(&headers), body),
