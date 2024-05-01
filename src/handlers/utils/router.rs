@@ -1,14 +1,10 @@
 use axum::extract::OriginalUri;
 use std::fs::metadata;
 
-pub async fn get_import_module(uri: &OriginalUri) -> Option<String> {
-    let mut uri = uri.to_string();
-    let mut tmp = uri.split("?");
-    uri = tmp.next().unwrap().to_string();
-
+pub async fn get_import_module(uri: &str) -> Option<String> {
     println!("uri: {}", uri);
 
-    let mut module_path: String = uri.clone();
+    let mut module_path: String = String::from(uri);
     let mut import_str: String = String::from("");
 
     if !module_path.ends_with("/") {

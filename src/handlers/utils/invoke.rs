@@ -16,8 +16,9 @@ fn get_headers_map(headers: &HeaderMap<HeaderValue>) -> HashMap<String, String> 
 
 pub fn call_python(
     invokation_path: &str,
+    query_params: HashMap<String, String>,
+    path_params: Vec<String>,
     headers: HeaderMap,
-    params: HashMap<String, String>,
     body: String,
 ) -> Result<Py<PyAny>, PyErr> {
     // TODO: handle args
@@ -34,7 +35,10 @@ pub fn call_python(
         let app: Py<PyAny> = PyModule::from_code_bound(py, &py_app, "", "")?
             .getattr(l.next().unwrap())?
             .into();
-        app.call1(py, (get_headers_map(&headers), params, body))
+        app.call1(
+            py,
+            (query_params, path_params, get_headers_map(&headers), body),
+        )
         //app.call0(py).unwrap().extract(py)
     })
 }
