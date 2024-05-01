@@ -54,7 +54,7 @@ pub fn call_python(
         kwargs.insert("headers", get_headers_map(&headers));
         view.call_bound(
             py,
-            PyTuple::new(py, path_params),
+            PyTuple::new_bound(py, path_params),
             Some(&kwargs.into_py_dict_bound(py)),
         )
         /*view.call1(

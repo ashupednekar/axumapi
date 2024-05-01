@@ -1,9 +1,6 @@
 use axum::extract::OriginalUri;
 use axum::http::header::{HeaderMap, HeaderValue};
-use pyo3::prelude::{PyObject, PyResult};
 use regex::Regex;
-use serde_json::{Map, Value};
-use std::collections::HashMap;
 /*fn headers_to_dict(headers: HeaderMap) -> PyDict {
     let mut dict = PyDict::new();
     for (key, value) in headers.iter() {
