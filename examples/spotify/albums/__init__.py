@@ -36,9 +36,9 @@ def retrieve(*args, **kwargs):
     id = args[0]
     logger.info(f"in album retrieve: {id}, {kwargs}")
     try:
-        albums[id + 1]
+        return albums[id + 1]
     except IndexError:
-        return {"detail": "album not found"}
+        raise IndexError("album not found")
 
 
 def get_tracks(id: int, **kwargs):

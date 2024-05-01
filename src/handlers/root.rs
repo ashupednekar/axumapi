@@ -6,6 +6,7 @@ use axum::{
     http::{HeaderMap, Method, StatusCode},
     response::IntoResponse,
 };
+use serde_json::to_string as dumps;
 use std::collections::HashMap;
 
 pub async fn handle(
@@ -32,7 +33,11 @@ pub async fn handle(
             let r = call_python(&import_str, query_params, path_params, headers, body);
             match r {
                 Ok(r) => (StatusCode::OK, r.to_string()),
-                Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()),
+                Err(e) => {
+                    let mut res = HashMap::new();
+                    res.insert("detail", e.to_string());
+                    (StatusCode::INTERNAL_SERVER_ERROR, dumps(&res).unwrap())
+                }
             }
         }
         None => (
