@@ -1,7 +1,8 @@
 use axum::extract::OriginalUri;
 use axum::http::header::{HeaderMap, HeaderValue};
+use pyo3::prelude::{PyObject, PyResult};
 use regex::Regex;
-use serde_json::json;
+use serde_json::{Map, Value};
 use std::collections::HashMap;
 /*fn headers_to_dict(headers: HeaderMap) -> PyDict {
     let mut dict = PyDict::new();
@@ -53,14 +54,6 @@ pub fn parse_cookies(headers: &HeaderMap) -> std::collections::HashMap<String, S
         }
     }
     cookie_map
-}
-
-pub fn get_payload_map(body: &str) -> HashMap<String, Vec<String>> {
-    let payload = match body.is_empty() {
-        true => Ok(HashMap::new()),
-        false => serde_json::from_str(&body),
-    };
-    payload.unwrap()
 }
 
 #[cfg(test)]
