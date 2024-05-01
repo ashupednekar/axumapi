@@ -24,7 +24,7 @@ pub async fn handle(
     println!("cookies: {:?}", cookies);
     let (path_params, url) = extract_path_params(&get_uri_str(uri.clone()));
 
-    let res = get_import_module(&url).await;
+    let res = get_import_module(&url, method.as_str()).await;
     match res {
         Some(m) => {
             println!("m: {}", m);
